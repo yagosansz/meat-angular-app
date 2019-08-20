@@ -1,0 +1,12 @@
+<div class="col-md-9 col-xs-12">
+  <mt-menu-item 
+    *ngFor="let item of menu | async" 
+    [menuItem]="item"
+    (add)="shoppingCart.addItem($event)"></mt-menu-item>
+    <!-- $event is the object that was emitted when the click event was triggered 
+         in the menu-item.component.html -->
+</div>
+<div class="col-md-3 col-xs-12">
+  <!-- #shoppingCart is a template variable -->
+  <mt-shopping-cart #shoppingCart></mt-shopping-cart>
+</div>
