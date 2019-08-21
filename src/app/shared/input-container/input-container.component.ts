@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ContentChild, AfterContentInit } from '@angular/core';
-import { NgModel } from '@angular/forms';
+import { NgModel, FormControlName } from '@angular/forms';
 
 @Component({
   selector: 'mt-input-container',
@@ -13,8 +13,9 @@ export class InputContainerComponent implements OnInit, AfterContentInit {
 
   input: any
 
-  // I want a reference to NgModel (directive) assigned to my variable 'model' of type NgModel.s
+  // I want a reference to NgModel (directive) assigned to my variable 'model' of type NgModel
   @ContentChild(NgModel) model: NgModel
+  @ContentChild(FormControlName) controlName: FormControlName
 
   constructor() { }
 
@@ -24,9 +25,10 @@ export class InputContainerComponent implements OnInit, AfterContentInit {
   // This method is invoked after the content (the one that will replace <ngContent></ngContent>) 
   // has been defined.
   ngAfterContentInit() {
-    this.input = this.model
+    // If this.model is not available, assign this.controlName to this.input
+    this.input = this.model || this.controlName
     if(this.input === undefined) {
-      throw new Error('This component needs to be used with the NgModel directive!')
+      throw new Error('This component needs to be used with NgModel or FormControlName!')
     }
   }
 
