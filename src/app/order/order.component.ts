@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
 import { Router } from '@angular/router';
 
@@ -34,6 +34,22 @@ export class OrderComponent implements OnInit {
   min: number = 1
   deliveryCost: number = Math.floor(Math.random() * (this.max - this.min + 1) + this.min)
 
+  static equalsTo(group: AbstractControl): { [key: string]: boolean } {
+    const email = group.get('email') // input should be the same as property used in form
+    const emailConfirmation = group.get('emailConfirmation')
+
+    if(!email || !emailConfirmation) {
+      return undefined
+    }
+
+    if(email.value !== emailConfirmation.value) {
+      return { emailsNotMatch: true }
+    }
+
+    return undefined
+  }
+
+
   ngOnInit() {
     this.orderForm = this.formBuilder.group({
       name: this.formBuilder.control('', [Validators.required, Validators.minLength(5)]),
@@ -43,9 +59,10 @@ export class OrderComponent implements OnInit {
       number: this.formBuilder.control('', [Validators.required, Validators.pattern(this.numberPattern)]),
       optionalAddress: this.formBuilder.control(''),
       paymentOption: this.formBuilder.control('', [Validators.required])
-    })
+    }, { validator: OrderComponent.equalsTo })
   }
 
+  
   cartItems() {
     return this.orderService.cartItems()
   }
