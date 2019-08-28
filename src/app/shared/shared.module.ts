@@ -14,9 +14,11 @@ import { RatingComponent } from './rating/rating.component';
 import { ShoppingCartService } from '../restaurant-detail/shopping-cart/shopping-cart.service';
 import { RestaurantsService } from '../restaurants/restaurants.service';
 import { OrderService } from '../order/order.service';
+import { SnackbarComponent } from './messages/snackbar/snackbar.component';
+
 
 @NgModule({
-    declarations: [InputContainerComponent, RadioComponent, RatingComponent],
+    declarations: [InputContainerComponent, RadioComponent, RatingComponent, SnackbarComponent],
     imports: [FormsModule, ReactiveFormsModule, CommonModule],
     /**
      * *** Why export the modules that are being imported? ***
@@ -24,7 +26,7 @@ import { OrderService } from '../order/order.service';
      * import them!
      */
     exports: [
-        InputContainerComponent, RadioComponent, RatingComponent,
+        InputContainerComponent, RadioComponent, RatingComponent, SnackbarComponent,
         CommonModule, FormsModule, ReactiveFormsModule 
     ]
 })
