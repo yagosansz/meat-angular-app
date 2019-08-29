@@ -34,22 +34,6 @@ export class OrderComponent implements OnInit {
   min: number = 1
   deliveryCost: number = Math.floor(Math.random() * (this.max - this.min + 1) + this.min)
 
-  static equalsTo(group: AbstractControl): { [key: string]: boolean } {
-    const email = group.get('email') // input should be the same as property used in form
-    const emailConfirmation = group.get('emailConfirmation')
-
-    if(!email || !emailConfirmation) {
-      return undefined
-    }
-
-    if(email.value !== emailConfirmation.value) {
-      return { emailsNotMatch: true }
-    }
-
-    return undefined
-  }
-
-
   ngOnInit() {
     this.orderForm = this.formBuilder.group({
       name: this.formBuilder.control('', [Validators.required, Validators.minLength(5)]),
@@ -62,7 +46,25 @@ export class OrderComponent implements OnInit {
     }, { validator: OrderComponent.equalsTo })
   }
 
-  
+  static equalsTo(group: AbstractControl): { [key: string]: boolean } {
+    const email = group.get('email') // input should be the same as property used in form
+    const emailConfirmation = group.get('emailConfirmation')
+
+    if(!email || !emailConfirmation) {
+      return undefined
+    }
+
+    if(email.value !== emailConfirmation.value) {
+      let error = { emailsNotMatch: true }
+      emailConfirmation.setErrors(error)
+      return error 
+    } else {
+      emailConfirmation.setErrors(null)
+    }
+
+    return undefined
+  }
+
   cartItems() {
     return this.orderService.cartItems()
   }

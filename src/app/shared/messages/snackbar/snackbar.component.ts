@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
+import { NotificationService } from './../notification.service';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/timer';
+
 @Component({
   selector: 'mt-snackbar',
   templateUrl: './snackbar.component.html',
@@ -22,13 +26,21 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 })
 export class SnackbarComponent implements OnInit {
 
-  message: string = 'Hello there'
+  message: string
 
   snackVisibility: string = 'hidden' // Component property to define visibility
 
-  constructor() { }
+  constructor(private notificationService: NotificationService) { }
 
   ngOnInit() {
+    // Using two Observables independently will make the snackbar
+    // behave in a weird way...if one snackbar is up but its timer is close to an end,
+    // triggering a second one will make it disappear as soon as the 1st one finshes!
+    this.notificationService.notifier.subscribe(message => {
+      this.message = message
+      this.snackVisibility = 'visible'
+      Observable.timer(2500).subscribe(timer => this.snackVisibility = 'hidden')
+    })
   }
 
 }
